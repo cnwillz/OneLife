@@ -562,7 +562,7 @@ void initDrawString( int inWidth, int inHeight ) {
     toggleMipMapMinFilter( true );
     toggleTransparentCropping( true );
     
-    mainFont = new Font( getFontTGAFileName(), 6, 16, false, 16 );
+    mainFont = new Font( getFontTGAFileName(), 6, 16, false, 32 );
     mainFont->setMinimumPositionPrecision( 1 );
 
     setViewCenterPosition( lastScreenViewCenter.x, lastScreenViewCenter.y );
@@ -663,7 +663,7 @@ void initFrameDrawer( int inWidth, int inHeight, int inTargetFrameRate,
     mainFontReview = new Font( getFontTGAFileName(), 4, 8, false, 16 );
     mainFontReview->setMinimumPositionPrecision( 1 );
 
-    mainFontFixed = new Font( getFontTGAFileName(), 6, 16, true, 16 );
+    mainFontFixed = new Font( getFontTGAFileName(), 6, 16, true, 32 );
     numbersFontFixed = new Font( getFontTGAFileName(), 6, 16, true, 16, 16 );
     
     mainFontFixed->setMinimumPositionPrecision( 1 );
@@ -1783,6 +1783,7 @@ void drawFrame( char inUpdate ) {
                         autoLogIn = false;
                         }
 
+                    /*/
                     if( binVersionNumber == expectedVersionNumber ) { 
                         currentGamePage = existingAccountPage;
                         currentGamePage->base_makeActive( true );
@@ -1799,6 +1800,9 @@ void drawFrame( char inUpdate ) {
                         finalMessagePage->setSubMessage( autoSprintf( "THIS VERSION OF THE MOD IS OUTDATED##(EXPECTING VERSION %d - RUNNING VERSION %d)##PLEASE DOWNLOAD A NEWER VERSION FROM:####HTTPS://GITHUB.COM/AWBZ/ONELIFE/RELEASES/LATEST", expectedVersionNumber, binVersionNumber ) );
                         currentGamePage->base_makeActive( true );
                     }
+                    //*/
+                    currentGamePage = existingAccountPage;
+                    currentGamePage->base_makeActive( true );
                 }
             }
         else if( currentGamePage == settingsPage ) {

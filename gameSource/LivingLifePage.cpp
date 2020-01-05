@@ -78,7 +78,7 @@ extern Font *pencilErasedFont;
 
 
 // to make all erased pencil fonts lighter
-static float pencilErasedFontExtraFade = 0.75;
+static float pencilErasedFontExtraFade = 0.05;
 
 
 extern doublePair lastScreenViewCenter;
@@ -2494,7 +2494,7 @@ LivingLifePage::LivingLifePage()
           mChalkBlotSprite( loadWhiteSprite( "chalkBlot.tga" ) ),
           mPathMarkSprite( loadWhiteSprite( "pathMark.tga" ) ),
           mSayField( handwritingFont, 0, 1000, 10, true, NULL,
-                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ.-,'?!/ " ),
+                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ.-,'?!/ 0123456789" ),
           mDeathReason( NULL ),
           mShowHighlights( true ),
           mUsingSteam( false ),
@@ -3326,7 +3326,7 @@ void LivingLifePage::drawChalkBackgroundString( doublePair inPos,
         }
 
     // FOVMOD NOTE:  Change 5/27 - Take these lines during the merge process
-    double lineSpacing = handwritingFont->getFontHeight() / 2 + ( 5 * gui_fov_scale_hud );
+    double lineSpacing = handwritingFont->getFontHeight() / 5;
     
     double firstLineY =  inPos.y + ( lines->size() - 1 ) * lineSpacing;
     
@@ -24678,7 +24678,7 @@ char* LivingLifePage::getFertilityStatus( LiveObject* targetObject ) {
 
 
 void LivingLifePage::lineageFertilityPanel( LiveObject* ourLiveObject, char displayPanel ) {
-	if ( ! displayPanel ) return;
+	if ( true || ! displayPanel ) return;
 	setDrawColor( 1, 1, 1, 1 );
 	doublePair fertPos = { lastScreenViewCenter.x + ( recalcOffsetX( 685, true ) * gui_fov_scale ), 
 						   lastScreenViewCenter.y + ( recalcOffsetY( 305 ) * gui_fov_scale ) };
