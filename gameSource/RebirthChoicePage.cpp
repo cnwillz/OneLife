@@ -67,17 +67,17 @@ RebirthChoicePage::RebirthChoicePage()
     setButtonStyle( &mFriendsButton );
     
     mQuitButton.addActionListener( this );
-    mReviewButton.addActionListener( this );
+    //mReviewButton.addActionListener( this );
     mRebornButton.addActionListener( this );
-    mGenesButton.addActionListener( this );
-    mTutorialButton.addActionListener( this );
+    //mGenesButton.addActionListener( this );
+    //mTutorialButton.addActionListener( this );
     mMenuButton.addActionListener( this );
-    mFriendsButton.addActionListener( this );
+    //mFriendsButton.addActionListener( this );
 
     int reviewPosted = SettingsManager::getIntSetting( "reviewPosted", 0 );
     
     if( reviewPosted ) {
-        mReviewButton.setLabelText( translate( "updateReviewButton" ) );
+        //mReviewButton.setLabelText( translate( "updateReviewButton" ) );
         }
     }
 

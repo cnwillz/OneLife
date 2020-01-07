@@ -1681,7 +1681,7 @@ void drawFrame( char inUpdate ) {
                         // true to auto-generate concrete transitions
                         // for all abstract category transitions
                         int numTrans = 
-                            initTransBankStart( &rebuilding, true, true, true,
+                            initTransBankStart( &rebuilding, true, false, true,
                                                 true );
                         
                         if( rebuilding ) {
@@ -2089,7 +2089,7 @@ void drawFrame( char inUpdate ) {
                                              getRequiredVersion() );
 
                 if( SettingsManager::getIntSetting( "useCustomServer", 0 ) ) {
-                    existingAccountPage->showDisableCustomServerButton( true );
+                    existingAccountPage->showDisableCustomServerButton( false );
                     }
                 
 

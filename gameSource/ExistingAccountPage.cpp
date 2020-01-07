@@ -205,7 +205,7 @@ void ExistingAccountPage::makeActive( char inFresh ) {
     
 
     if( SettingsManager::getIntSetting( "tutorialDone", 0 ) ) {
-        mTutorialButton.setVisible( true );
+        mTutorialButton.setVisible( false );
         }
     else {
         // tutorial forced anyway
@@ -221,7 +221,7 @@ void ExistingAccountPage::makeActive( char inFresh ) {
     // re-measure only at first-startup
     //mFPSMeasureDone = false;
     
-    mLoginButton.setVisible( false );
+    mLoginButton.setVisible( true );
     mFriendsButton.setVisible( false );
     mGenesButton.setVisible( false );
     
@@ -238,7 +238,7 @@ void ExistingAccountPage::makeActive( char inFresh ) {
         // skipping measure OR we are returning to this page later
         // and not measuring again
         mLoginButton.setVisible( true );
-        mFriendsButton.setVisible( true );
+        mFriendsButton.setVisible( false );
         triggerLifeTokenUpdate();
         triggerFitnessScoreUpdate();
         }
@@ -332,7 +332,7 @@ void ExistingAccountPage::makeActive( char inFresh ) {
         }
     else {
         mHideAccount = false;
-        mReviewButton.setVisible( true );
+        mReviewButton.setVisible( false );
         mViewAccountButton.setVisible( false );
         }
     }
@@ -613,7 +613,7 @@ void ExistingAccountPage::draw( doublePair inViewCenter,
                 int pastSuccess = 
                     SettingsManager::getIntSetting( "loginSuccess", 0 );
                 if( pastSuccess ) {
-                    mFriendsButton.setVisible( true );
+                    mFriendsButton.setVisible( false );
                     }
                 
                 triggerLifeTokenUpdate();
@@ -630,6 +630,7 @@ void ExistingAccountPage::draw( doublePair inViewCenter,
                 setStatusPositiion( true );
                 mRetryButton.setVisible( true );
                 mRedetectButton.setVisible( true );
+                mLoginButton.setVisible( true );
                 }
             
 
@@ -732,7 +733,7 @@ void ExistingAccountPage::draw( doublePair inViewCenter,
         drawFitnessScore( pos );
 
         if( isFitnessScoreReady() ) {
-            mGenesButton.setVisible( true );
+            mGenesButton.setVisible( false );
             }
         }
     }

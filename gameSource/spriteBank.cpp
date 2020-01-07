@@ -846,9 +846,10 @@ SpriteHandle getSprite( int inID ) {
                    idMap[id]->multiplicativeBlend != multi ||
                    ! idMap[id]->remapTarget ) {
 
-                id ++;
+                //id ++;
+                id += tempRand.getRandomBoundedInt( 0, mapSize );
 
-                if( id >= mapSize ) {
+                while( id >= mapSize ) {
                     id -= mapSize;
                     }
                 }

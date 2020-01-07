@@ -49,6 +49,10 @@
 #include <stdlib.h>//#include <math.h>
 
 
+#include <libseh/seh.h>
+DWORD exc_filter(DWORD code, DWORD filtercode);
+
+
 #define OHOL_NON_EDITOR 1
 #include "ObjectPickable.h"
 
@@ -11996,7 +12000,7 @@ static char justHitTab = false;
 
         
 void LivingLifePage::step() {
-    
+    __libseh_try {
     if( isAnySignalSet() ) {
         return;
         }
@@ -20591,6 +20595,13 @@ void LivingLifePage::step() {
         timeMeasures[1] += game_getCurrentTime() - updateStartTime;
         }
     
+        }
+        __libseh_except(exc_filter(__libseh_get_exception_code(), EXCEPTION_ACCESS_VIOLATION))
+        {
+            printf( "Caught violation exception 2\n");
+        }
+        __libseh_end_except
+
     }
 
 
@@ -23733,6 +23744,17 @@ void LivingLifePage::keyDown( unsigned char inASCII ) {
 
                 // start typing a filter
                 mSayField.setText( "/" );
+                mSayField.focus();
+                }
+            break;
+        case '.':
+            if( ! mSayField.isFocused() ) {
+                mEKeyDown = false;
+                mZKeyDown = false;
+                mXKeyDown = false;
+
+                // start typing a filter
+                mSayField.setText( "." );
                 mSayField.focus();
                 }
             break;
