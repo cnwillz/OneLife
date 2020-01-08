@@ -21928,6 +21928,7 @@ void LivingLifePage::pointerDown( float inX, float inY ) {
         if ( isCommandKeyDown() ) {
             float currentHUDScale = SettingsManager::getFloatSetting( "fovScaleHUD", 1.0f );
             newScale = ( mouseButton == MouseButton::WHEELUP ) ? currentHUDScale -= 0.5 : currentHUDScale += 0.5;
+            //changeHUDFOV( newScale );
         } else {
             //changeFOV( newScale );
             }
