@@ -270,6 +270,15 @@ static double culvertFractalRoughness = 0.62;
 static double culvertFractalAmp = 98;
 
 
+static bool upKeyDown = false;
+static bool leftKeyDown = false;
+static bool downKeyDown = false;
+static bool rightKeyDown = false;
+
+static float lastPosX = 9999;
+static float lastPosY = 9999;
+
+
 typedef struct LocationSpeech {
         doublePair pos;
         char *speech;
@@ -3330,7 +3339,7 @@ void LivingLifePage::drawChalkBackgroundString( doublePair inPos,
         }
 
     // FOVMOD NOTE:  Change 5/27 - Take these lines during the merge process
-    double lineSpacing = handwritingFont->getFontHeight() / 5;
+    double lineSpacing = handwritingFont->getFontHeight() / 2 + ( 5 * gui_fov_scale_hud );
     
     double firstLineY =  inPos.y + ( lines->size() - 1 ) * lineSpacing;
     
@@ -10578,6 +10587,55 @@ void LivingLifePage::draw( doublePair inViewCenter,
             drawMessage( "bugMessage2", messagePos );
             }
         }
+
+    //WASD movement
+    do {
+        if (!upKeyDown && !leftKeyDown && !downKeyDown && !rightKeyDown)
+            break;
+        
+        LiveObject *ourLiveObject = getOurLiveObject();
+        float x = round(ourLiveObject->currentPos.x);
+        float y = round(ourLiveObject->currentPos.y);
+
+        if (x == lastPosX && y == lastPosY && ourLiveObject->inMotion)
+            break;
+
+        lastPosX = x;
+        lastPosY = y;
+
+        //debugRecPos2.x = x*CELL_D;
+        //debugRecPos2.y = y*CELL_D;
+
+        const float stepSizePlus = 1.4f;
+        const float stepSizeMinus = 0.6f;
+        if (upKeyDown)
+            y += stepSizePlus;
+        else if (downKeyDown)
+            y -= stepSizeMinus;
+
+        if (rightKeyDown)
+            x += stepSizePlus;
+        else if (leftKeyDown)
+            x -= stepSizeMinus;
+
+        //int objId = livingLifePage->hetuwGetObjId((int)x, (int)y);
+        //if (objId > 0) std::cout << "hetuw objId: " << objId << " xy: " << x << ", " << y << "\n";
+        //if (objId > 0 && getObject(objId)->blocksWalking) return;
+
+        x *= CELL_D;
+        y *= CELL_D;
+
+        mForceGroundClick = true;
+        mouseDownFrames = 10;
+        mouseDown = true;
+        pointerDown( x, y );
+        pointerUp( x, y );
+        mouseDownFrames = 0;
+        mouseDown = false;
+        mForceGroundClick = false;
+    }
+    while(false);
+
 
     
     if( vogMode ) {
@@ -21870,12 +21928,11 @@ void LivingLifePage::pointerDown( float inX, float inY ) {
         if ( isCommandKeyDown() ) {
             float currentHUDScale = SettingsManager::getFloatSetting( "fovScaleHUD", 1.0f );
             newScale = ( mouseButton == MouseButton::WHEELUP ) ? currentHUDScale -= 0.5 : currentHUDScale += 0.5;
-            changeHUDFOV( newScale );
         } else {
-            changeFOV( newScale );
+            //changeFOV( newScale );
             }
 		return;
-	}
+	}//*/
     
     mLastMouseOverID = 0;
     
@@ -23457,6 +23514,350 @@ void LivingLifePage::keyDown( unsigned char inASCII ) {
         }
 
 
+    if(! mSayField.isFocused()) {
+
+        if (inASCII == 'q') {
+            LiveObject *ourLiveObject = getOurLiveObject();
+            int clothingSlot = 5; // backpack clothing slot
+
+            int x = round( ourLiveObject->xd );
+            int y = round( ourLiveObject->yd );
+            x = sendX(x);
+            y = sendY(y);
+
+            if( ourLiveObject->holdingID > 0 ) {
+                char msg[32];
+                sprintf( msg, "SELF %d %d %d#", x, y, clothingSlot );
+                if( nextActionMessageToSend != NULL ) {
+                    delete [] nextActionMessageToSend;
+                    nextActionMessageToSend = NULL;
+                }
+
+                playerActionTargetX = x;
+                playerActionTargetY = y;
+                playerActionTargetNotAdjacent = true;
+                nextActionDropping = false;
+                nextActionEating = false;
+                nextActionMessageToSend = autoSprintf( "%s", msg );
+
+                nextActionDropping = true;
+            } else {
+                char msg[32];
+                sprintf( msg, "SREMV %d %d %d %d#", x, y, clothingSlot, -1 );
+                if( nextActionMessageToSend != NULL ) {
+                    delete [] nextActionMessageToSend;
+                    nextActionMessageToSend = NULL;
+                }
+
+                playerActionTargetX = x;
+                playerActionTargetY = y;
+                playerActionTargetNotAdjacent = true;
+                nextActionDropping = false;
+                nextActionEating = false;
+                nextActionMessageToSend = autoSprintf( "%s", msg );
+            }
+            return;
+        }
+        if (inASCII == 'Q') {
+            LiveObject *ourLiveObject = getOurLiveObject();
+            int clothingSlot = 5; // backpack clothing slot
+
+            int x = round( ourLiveObject->xd );
+            int y = round( ourLiveObject->yd );
+            x = sendX(x);
+            y = sendY(y);
+
+            if( ourLiveObject->holdingID > 0 ) {
+                char msg[32];
+                sprintf( msg, "DROP %d %d %d#", x, y, clothingSlot );
+                if( nextActionMessageToSend != NULL ) {
+                    delete [] nextActionMessageToSend;
+                    nextActionMessageToSend = NULL;
+                }
+
+                playerActionTargetX = x;
+                playerActionTargetY = y;
+                playerActionTargetNotAdjacent = true;
+                nextActionDropping = false;
+                nextActionEating = false;
+                nextActionMessageToSend = autoSprintf( "%s", msg );
+
+                nextActionDropping = true;
+            } else {
+                char msg[32];
+                sprintf( msg, "SREMV %d %d %d %d#", x, y, clothingSlot, -1 );
+                if( nextActionMessageToSend != NULL ) {
+                    delete [] nextActionMessageToSend;
+                    nextActionMessageToSend = NULL;
+                }
+
+                playerActionTargetX = x;
+                playerActionTargetY = y;
+                playerActionTargetNotAdjacent = true;
+                nextActionDropping = false;
+                nextActionEating = false;
+                nextActionMessageToSend = autoSprintf( "%s", msg );
+            }
+            return;
+        }
+
+        if (isCommandKeyDown()) {
+            if (inASCII == ' ') {
+                LiveObject *ourLiveObject = getOurLiveObject();
+                int x = ourLiveObject->xd;
+                int y = ourLiveObject->yd;
+
+                bool remove = false;
+
+                if (ourLiveObject->holdingID <= 0) {
+                    remove = true;
+                }
+
+                x = sendX(x);
+                y = sendY(y);
+                char msg[32];
+                if (remove) sprintf( msg, "REMV %d %d -1#", x, y);
+                else sprintf( msg, "DROP %d %d -1#", x, y);
+
+                if( nextActionMessageToSend != NULL ) {
+                    delete [] nextActionMessageToSend;
+                    nextActionMessageToSend = NULL;
+                }
+
+                playerActionTargetX = x;
+                playerActionTargetY = y;
+                playerActionTargetNotAdjacent = true;
+                nextActionDropping = false;
+                nextActionEating = false;
+                nextActionMessageToSend = autoSprintf( "%s", msg );
+
+                if( !remove)
+                    nextActionDropping = true;
+                return;
+            }
+        } else {
+            if (inASCII == ' ') {
+                LiveObject *ourLiveObject = getOurLiveObject();
+                int x = ourLiveObject->xd;
+                int y = ourLiveObject->yd;
+
+                 int objId;
+                int mapX = x - mMapOffsetX + mMapD / 2;
+                int mapY = y - mMapOffsetY + mMapD / 2;
+                int i = mapY * mMapD + mapX;
+                if (i < 0 || i >= mMapD*mMapD) objId = 0;
+                else objId = mMap[i];
+
+                bool use = false;
+
+                if (objId > 0) use = true;
+                else use = false;
+
+                if( ourLiveObject->holdingID > 0 ) {
+                    ObjectRecord *held = getObject( ourLiveObject->holdingID );
+                 
+                    if( held->foodValue == 0 ) {
+                        TransRecord *r = getTrans( ourLiveObject->holdingID, -1 );
+                        if( r != NULL && r->newTarget != 0 ) { // a use-on-ground transition exists!
+                            use = true; // override the drop action
+                        }
+                    }
+                }
+
+                x = sendX(x);
+                y = sendY(y);
+                char msg[32];
+                if (use) sprintf( msg, "USE %d %d#", x, y);
+                else sprintf( msg, "DROP %d %d -1#", x, y);
+
+                if( nextActionMessageToSend != NULL ) {
+                    delete [] nextActionMessageToSend;
+                    nextActionMessageToSend = NULL;
+                }
+
+                playerActionTargetX = x;
+                playerActionTargetY = y;
+                playerActionTargetNotAdjacent = true;
+                nextActionDropping = false;
+                nextActionEating = false;
+                nextActionMessageToSend = autoSprintf( "%s", msg );
+                return;
+            }
+        }
+    }
+
+    //relative action
+    if(isShiftKeyDown() && ! mSayField.isFocused()) {
+        int x = 0, y = 0;
+        if (inASCII == 'w' || inASCII == 'W') {
+            x = 0;
+            y = 1;
+        }
+        if (inASCII == 'a' || inASCII == 'A') {
+            x = -1;
+            y = 0;
+        }
+        if (inASCII == 's' || inASCII == 'S') {
+            x = 0;
+            y = -1;
+        }
+        if (inASCII == 'd' || inASCII == 'D') {
+            x = 1;
+            y = 0;
+        }
+
+        if(x != 0 || y != 0) {
+            LiveObject *ourLiveObject = getOurLiveObject();
+            x += ourLiveObject->xd;
+            y += ourLiveObject->yd;
+
+             int objId;
+            int mapX = x - mMapOffsetX + mMapD / 2;
+            int mapY = y - mMapOffsetY + mMapD / 2;
+            int i = mapY * mMapD + mapX;
+            if (i < 0 || i >= mMapD*mMapD) objId = 0;
+            else objId = mMap[i];
+
+            bool use = false;
+
+            if (objId > 0) use = true;
+            else use = false;
+
+            if( ourLiveObject->holdingID > 0 ) {
+                ObjectRecord *held = getObject( ourLiveObject->holdingID );
+             
+                if( held->foodValue == 0 ) {
+                    TransRecord *r = getTrans( ourLiveObject->holdingID, -1 );
+                    if( r != NULL && r->newTarget != 0 ) { // a use-on-ground transition exists!
+                        use = true; // override the drop action
+                    }
+                }
+            }
+
+            x = sendX(x);
+            y = sendY(y);
+            char msg[32];
+            if (use) sprintf( msg, "USE %d %d#", x, y);
+            else sprintf( msg, "DROP %d %d -1#", x, y);
+
+            if( nextActionMessageToSend != NULL ) {
+                delete [] nextActionMessageToSend;
+                nextActionMessageToSend = NULL;
+            }
+
+            playerActionTargetX = x;
+            playerActionTargetY = y;
+            playerActionTargetNotAdjacent = true;
+            nextActionDropping = false;
+            nextActionEating = false;
+            nextActionMessageToSend = autoSprintf( "%s", msg );
+            return;
+        }
+    }
+    if(isCommandKeyDown() && ! mSayField.isFocused()) {
+        int x = 0, y = 0;
+        if (inASCII + 64 == 'W') {
+            x = 0;
+            y = 1;
+        }
+        if (inASCII + 64 == 'A') {
+            x = -1;
+            y = 0;
+        }
+        if (inASCII + 64 == 'S') {
+            x = 0;
+            y = -1;
+        }
+        if (inASCII + 64 == 'D') {
+            x = 1;
+            y = 0;
+        }
+
+        if(x != 0 || y != 0) {
+            LiveObject *ourLiveObject = getOurLiveObject();
+            x += ourLiveObject->xd;
+            y += ourLiveObject->yd;
+
+            bool remove = false;
+
+            if (ourLiveObject->holdingID <= 0) {
+                remove = true;
+            }
+
+            x = sendX(x);
+            y = sendY(y);
+            char msg[32];
+            if (remove) sprintf( msg, "REMV %d %d -1#", x, y);
+            else sprintf( msg, "DROP %d %d -1#", x, y);
+
+            if( nextActionMessageToSend != NULL ) {
+                delete [] nextActionMessageToSend;
+                nextActionMessageToSend = NULL;
+            }
+
+            playerActionTargetX = x;
+            playerActionTargetY = y;
+            playerActionTargetNotAdjacent = true;
+            nextActionDropping = false;
+            nextActionEating = false;
+            nextActionMessageToSend = autoSprintf( "%s", msg );
+
+            if( !remove)
+                nextActionDropping = true;
+            return;
+        }
+    }
+
+    //WASD movement here
+    if(! mSayField.isFocused())
+    {
+        if (inASCII == 'w') {
+            upKeyDown = true;
+            return;
+        }
+        if (inASCII == 'a') {
+            leftKeyDown = true;
+            return;
+        }
+        if (inASCII == 's') {
+            downKeyDown = true;
+            return;
+        }
+        if (inASCII == 'd') {
+            rightKeyDown = true;
+            return;
+        }
+    }
+
+    if (! mSayField.isFocused() && (inASCII == 'E' || inASCII == 'e')) {
+        LiveObject *ourLiveObject = getOurLiveObject();
+        int x = round( ourLiveObject->xd );
+        int y = round( ourLiveObject->yd );
+        x = sendX(x);
+        y = sendY(y);
+
+        if( ourLiveObject->holdingID <= 0 ) return;
+
+        char msg[32];
+        sprintf( msg, "SELF %d %d %d#", x, y, -1 );
+        if( nextActionMessageToSend != NULL ) {
+            delete [] nextActionMessageToSend;
+            nextActionMessageToSend = NULL;
+        }
+
+        playerActionTargetX = x;
+        playerActionTargetY = y;
+        playerActionTargetNotAdjacent = true;
+        nextActionDropping = false;
+        nextActionEating = false;
+        nextActionMessageToSend = autoSprintf( "%s", msg );
+
+        if( getObject( ourLiveObject->holdingID )->foodValue > 0)
+            nextActionEating = true;
+        return;
+    }
+
+
     if( isShiftKeyDown() && /*( isalpha( inASCII ) ||*/ inASCII == 32 ) /*)*/ {
 		if( ! mSayField.isFocused() ) {
             mSayField.focus();
@@ -23476,12 +23877,7 @@ void LivingLifePage::keyDown( unsigned char inASCII ) {
         }
     }
 
-    if( inASCII == 63 ) { // Question Mark
-        if( ! mSayField.isFocused() ) {
-            showCursorZoom = !showCursorZoom;
-        }
-    }
-	
+
     switch( inASCII ) {
         /*
         // useful for testing
@@ -24210,6 +24606,28 @@ void LivingLifePage::specialKeyDown( int inKeyCode ) {
 
         
 void LivingLifePage::keyUp( unsigned char inASCII ) {
+    //WASD movement
+    if (inASCII == 'w') {
+        upKeyDown = false;
+        return;
+    }
+    if (inASCII == 'a') {
+        leftKeyDown = false;
+        return;
+    }
+    if (inASCII == 's') {
+        downKeyDown = false;
+        return;
+    }
+    if (inASCII == 'd') {
+        rightKeyDown = false;
+        return;
+    }
+    if (!upKeyDown && !leftKeyDown && !downKeyDown && !rightKeyDown) {
+        lastPosX = 9999;
+        lastPosY = 9999;
+    }
+
 
     switch( inASCII ) {
         case 'e':
