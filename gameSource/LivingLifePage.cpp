@@ -24608,19 +24608,19 @@ void LivingLifePage::specialKeyDown( int inKeyCode ) {
         
 void LivingLifePage::keyUp( unsigned char inASCII ) {
     //WASD movement
-    if (inASCII == 'w') {
+    if (inASCII == 'w' || inASCII == 'W') {
         upKeyDown = false;
         return;
     }
-    if (inASCII == 'a') {
+    if (inASCII == 'a' || inASCII == 'A') {
         leftKeyDown = false;
         return;
     }
-    if (inASCII == 's') {
+    if (inASCII == 's' || inASCII == 'S') {
         downKeyDown = false;
         return;
     }
-    if (inASCII == 'd') {
+    if (inASCII == 'd' || inASCII == 'D') {
         rightKeyDown = false;
         return;
     }
