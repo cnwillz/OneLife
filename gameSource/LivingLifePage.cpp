@@ -23516,6 +23516,10 @@ void LivingLifePage::keyDown( unsigned char inASCII ) {
 
 
     if(! mSayField.isFocused()) {
+        if(inASCII == 'f' || inASCII == 'F') {
+            shouldMoveCamera = false;
+            return;
+        }
 
         if (inASCII == 'q') {
             LiveObject *ourLiveObject = getOurLiveObject();
@@ -24643,7 +24647,8 @@ void LivingLifePage::keyUp( unsigned char inASCII ) {
         case 'X':
             mXKeyDown = false;
             break;
-        case ' ':
+        case 'f':
+        case 'F':
             shouldMoveCamera = true;
             break;
         }
