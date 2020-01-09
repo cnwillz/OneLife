@@ -228,11 +228,13 @@ void setFOVScale() {
 	else if( gui_hud_mode > 2 ) gui_hud_mode = 2;
 	SettingsManager::setSetting( "hudDrawMode", gui_hud_mode );
 
+    SettingsManager::setSetting( "fovScaleHUD", 1.0f );
     gui_fov_target_scale_hud = SettingsManager::getFloatSetting( "fovScaleHUD", 1.0f );
 	if( gui_fov_target_scale_hud < 1.0f ) gui_fov_target_scale_hud = 1.0f;
 	else if( gui_fov_target_scale_hud > 6.0f ) gui_fov_target_scale_hud = 6.0f;
 	SettingsManager::setSetting( "fovScaleHUD", gui_fov_target_scale_hud );
 	
+    SettingsManager::setSetting( "fovScale", 1.0f );
     gui_fov_scale = SettingsManager::getFloatSetting( "fovScale", 1.0f );
     if( gui_fov_scale < 1.0f ) gui_fov_scale = 1.0f;
 	else if ( gui_fov_scale > 6.0f ) gui_fov_scale = 6.0f;
