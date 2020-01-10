@@ -10593,6 +10593,8 @@ void LivingLifePage::draw( doublePair inViewCenter,
         if (!upKeyDown && !leftKeyDown && !downKeyDown && !rightKeyDown)
             break;
         
+        isLastMouseButtonRight();
+        
         LiveObject *ourLiveObject = getOurLiveObject();
         float x = round(ourLiveObject->currentPos.x);
         float y = round(ourLiveObject->currentPos.y);
@@ -23712,6 +23714,8 @@ void LivingLifePage::keyDown( unsigned char inASCII ) {
         }
 
         if(x != 0 || y != 0) {
+            isLastMouseButtonRight();
+
             LiveObject *ourLiveObject = getOurLiveObject();
             x += ourLiveObject->xd;
             y += ourLiveObject->yd;
@@ -23779,6 +23783,8 @@ void LivingLifePage::keyDown( unsigned char inASCII ) {
         }
 
         if(x != 0 || y != 0) {
+            isLastMouseButtonRight();
+
             LiveObject *ourLiveObject = getOurLiveObject();
             x += ourLiveObject->xd;
             y += ourLiveObject->yd;
