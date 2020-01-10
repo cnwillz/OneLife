@@ -1324,6 +1324,7 @@ void initTransBankFinish() {
                 }
             }
 
+if(false)
         for( int t=0; t<transToDelete.size(); t++ ) {
             TransRecord *tr = transToDelete.getElementDirect( t );
                     
@@ -1333,6 +1334,50 @@ void initTransBankFinish() {
                                  true );
             numRemoved++;
             }
+
+
+        //find biggest id
+        int biggestId = 0;
+        for( int t=0; t<transToAdd.size(); t++ ) {
+            TransRecord *newTrans = transToAdd.getElement( t );
+            if( newTrans->actor > biggestId )
+                biggestId = newTrans->actor;
+            if( newTrans->target > biggestId )
+                biggestId = newTrans->target;
+            if( newTrans->newActor > biggestId )
+                biggestId = newTrans->newActor;
+            if( newTrans->newTarget > biggestId )
+                biggestId = newTrans->newTarget;
+        }
+
+        // exapand id-indexed maps before we add them to reduce time waste   
+        if( biggestId >= mapSize ) {
+
+            int max = biggestId;
+            
+            int newMapSize = max + 1;
+            
+            SimpleVector<TransRecord *> *newUsesMap =
+                new SimpleVector<TransRecord *>[ newMapSize ];
+            
+            SimpleVector<TransRecord *> *newProducesMap =
+                new SimpleVector<TransRecord *>[ newMapSize ];
+
+            
+            // invoke copy constructors (don't use memcpy)
+            for( int i=0; i<mapSize; i++ ) {
+                newUsesMap[i] = usesMap[i];
+                newProducesMap[i] = producesMap[i];
+                }
+            
+            delete [] usesMap;
+            delete [] producesMap;
+            
+            usesMap = newUsesMap;
+            producesMap = newProducesMap;
+            
+            mapSize = newMapSize;
+        }
 
         for( int t=0; t<transToAdd.size(); t++ ) {
             TransRecord *newTrans = transToAdd.getElement( t );
