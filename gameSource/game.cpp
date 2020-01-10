@@ -2203,7 +2203,7 @@ void drawFrame( char inUpdate ) {
                     currentGamePage = livingLifePage;
                     }
                 else {
-                    currentGamePage = pollPage;
+                    currentGamePage = rebirthChoicePage;
                     }
                 currentGamePage->base_makeActive( true );
                 }
