@@ -18351,8 +18351,10 @@ void LivingLifePage::step() {
             delete [] lines;
             }
         else if( type == PLAYER_SAYS ) {
+            char* transcoded = U2G(message);
+
             int numLines;
-            char **lines = split( message, "\n", &numLines );
+            char **lines = split( transcoded, "\n", &numLines );
             
             if( numLines > 0 ) {
                 // skip first
@@ -18476,8 +18478,10 @@ void LivingLifePage::step() {
             delete [] lines;
             }
         else if( type == LOCATION_SAYS ) {
+            char* transcoded = U2G(message);
+
             int numLines;
-            char **lines = split( message, "\n", &numLines );
+            char **lines = split( transcoded, "\n", &numLines );
             
             if( numLines > 0 ) {
                 // skip first
