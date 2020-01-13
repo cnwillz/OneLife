@@ -3358,11 +3358,8 @@ void LivingLifePage::drawChalkBackgroundString( doublePair inPos,
                                                 FloatColor *inForceBlotColor,
                                                 FloatColor *inForceTextColor ) {
     
-    char *stringUpper = stringToUpperCase( inString );
-
-    SimpleVector<char*> *lines = splitLines( inString, inMaxWidth );
-    
-    delete [] stringUpper;
+    SimpleVector<char*> *lines = new SimpleVector<char*>();
+    lines->push_back(stringDuplicate(inString));
 
     
     if( lines->size() == 0 ) {
